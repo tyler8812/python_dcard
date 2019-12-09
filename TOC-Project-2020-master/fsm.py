@@ -1,8 +1,8 @@
 from transitions.extensions import GraphMachine
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, URITemplateAction, MessageAction
-
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, URITemplateAction, MessageAction, VideoSendMessage
+import random
 from utils import send_text_message, send_temp_message
-from bug import bug2, bug1, bug3, bug4, bug5
+from bug import bug2, bug1, bug3, bug4, bug5, bug6
 # a
 url_list_for_all = []
 # b
@@ -11,6 +11,8 @@ text_list = []
 title_list = []
 # b
 url_list = []
+
+video = []
 
 set_url = "https://www.dcard.tw"
 
@@ -65,7 +67,14 @@ class TocMachine(GraphMachine):
             return True
         else:
             return False
-
+    def is_going_to_state8(self, event):
+        text = event.message.text
+       
+        return text.lower() == "dcard影片"
+    def is_going_to_state9(self, event):
+        text = event.message.text
+       
+        return text.lower() == "yes"
     def on_enter_state1(self, event):
         print("I'm entering state1")
         reply_token = event.reply_token
@@ -300,3 +309,40 @@ class TocMachine(GraphMachine):
         
     def on_exit_state7(self):
         print("Leaving state7")
+
+    def on_enter_state8(self, event):
+        print("I'm entering state8")
+        reply_token = event.reply_token
+        video = []
+        final = []
+        temp = ""
+        bug6(video)
+        final = random.sample(video, 5)
+        # print(len(final))
+        for i in range(len(final)):
+            temp = temp + final[i] + "\n"
+        
+        reply_token = event.reply_token
+        send_text_message(reply_token, temp)
+        self.go_back()
+
+        
+    def on_exit_state8(self):
+        print("Leaving state8")
+
+    def on_enter_state9(self, event):
+        print("I'm entering state9")
+        reply_token = event.reply_token
+        message = VideoSendMessage(
+            original_content_url='https://i.imgur.com/esj1spp.mp4',
+            preview_image_url='https://upload.wikimedia.org/wikipedia/commons/f/f8/Dcard_Favicon_x520.png'
+        )
+      
+        
+        reply_token = event.reply_token
+        send_temp_message(reply_token, message)
+        self.go_back()
+
+        
+    def on_exit_state9(self):
+        print("Leaving state9")

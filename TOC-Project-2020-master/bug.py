@@ -91,7 +91,20 @@ def bug5(a, b, c):
             a.append(temp[1][0:18])
             b.append(temp[0])
             
-            
+
+def bug6(a):
+    url = "https://www.youtube.com/channel/UCaaZYXjaVXrxegTZHCAxDmQ/videos"
+    resp = requests.get(url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    tag_name = "h3 a"
+    articles = soup.select(tag_name)
+
+    for art in articles:
+        yt = "https://www.youtube.com"
+        yt += art['href']
+        a.append(yt)
+              
 
 
             
